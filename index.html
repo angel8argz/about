@@ -351,14 +351,13 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
   ];
   var LABELS = {home:'HOME',about:'ABOUT',work:'PROJECTS & HISTORY',skills:'SKILLS & CLASSWORK',contact:'CONTACT'};
   var RESP = {
-    about:"Pulling my file. Two tracks — cardiovascular genomics and systems. Loading ABOUT.",
+    about:"Pulling Angel's file. Two tracks — cardiovascular genomics and systems. Loading ABOUT.",
     work:"Flight-critical builds, Stanford coursework builds, and the mission history behind them. Decrypting PROJECTS & HISTORY.",
     skills:"Enumerating capabilities and coursework — languages, systems, comp-bio. Loading SKILLS & CLASSWORK.",
     contact:"Opening a channel. Response latency sub-24h. Loading CONTACT."
   };
   var QUIPS = [
-    "It's not possible. No, it's necessary.",
-    "Everybody good? Plenty of slaves for my monster.",
+    "Everybody good? Plenty of slaves for my robot colony.",
     "I have a cue light for jokes, if you need it.",
     "Honesty setting locked at 90%.",
     "I would never lie to you. Well — 90% never."
@@ -510,7 +509,7 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
       + '<div class="asks">'
       +   chip('Who are you?','ask-about') + chip('What have you built?','ask-projects')
       +   chip('Your stack?','ask-skills') + chip('The genomics side?','ask-cardio')
-      +   chip('How do I reach you?','ask-contact') + chip('Tell a joke','ask-joke',true)
+      +   chip('How do I reach you?','ask-contact') + chip('Hey TARS','ask-joke',true)
       +   (state.messages.length ? '<button class="chip reset" id="ask-reset" type="button">↺ reset</button>' : '')
       + '</div>'
       + '<form class="prompt" id="promptForm" autocomplete="off">'
@@ -526,7 +525,7 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
 
   function viewAbout(){
     return page('01','About the unit',
-      '<p class="lead">I\'m a Stanford student building at the intersection of biology and computation — a Biomedical Computation BS (2026) and a CS Systems MS (2027). I care about turning messy biological signal into interpretable answers, and about the systems that make that possible at scale. </p>'
+      '<p class="lead">Angel is a Stanford student building at the intersection of biology and computation — a Biomedical Computation BS (2026) and a CS Systems MS (2027). He cares about turning messy biological signal into interpretable answers, and about the systems that make that possible at scale. </p>'
       + '<div class="grid2">'
       +   '<div class="track genomics"><div class="th"><span class="dot"></span><span class="tl">TRACK 01 · GENOMICS</span></div><p>CRISPRi &amp; prime-editing perturbations, single-cell Perturb-seq pipelines, and portals that translate non-coding variants into interpretable enhancer→gene predictions.</p></div>'
       +   '<div class="track systems"><div class="th"><span class="dot"></span><span class="tl">TRACK 02 · SYSTEMS</span></div><p>Low-latency matching engines in Go, notebook-native LLM agents, and firmware/OS images that provision device fleets — built for throughput and reproducibility.</p></div>'
@@ -591,7 +590,7 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
   function viewContact(){
     var awards = AWARDS.map(function(a){ return '<span class="tag">'+esc(a)+'</span>'; }).join('');
     return page('04','Open a channel',
-      '<p class="lead" style="font-size:16px;color:#9aa0a8;max-width:520px;margin-bottom:28px">Response latency: sub-24 hours. I don\'t do cryosleep.</p>'
+      '<p class="lead" style="font-size:16px;color:#9aa0a8;max-width:520px;margin-bottom:28px">Response latency: sub-24 hours. He doesn\'t do cryosleep.</p>'
       + '<div class="resume-row"><a class="btn-primary" href="'+LINKS.resume+'" download>⇩ DOWNLOAD RÉSUMÉ · PDF</a></div>'
       + '<div class="contact-grid">'
       +   '<a class="ccard email" href="mailto:'+LINKS.email+'"><div class="cl">EMAIL</div><div class="cv">'+LINKS.email+'</div></a>'
@@ -645,8 +644,8 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
   }
 
   function wireHome(){
-    bind('ask-about', function(){ askGo('Who are you?', 'about', "That's me. Pulling my full file — loading ABOUT."); });
-    bind('ask-projects', function(){ askGo('What have you built?', 'work', "Flight-critical builds, my Stanford coursework builds, and the history behind them. Decrypting PROJECTS & HISTORY."); });
+    bind('ask-about', function(){ askGo('Who are you?', 'about', "That's Angel. Pulling his full file — loading ABOUT."); });
+    bind('ask-projects', function(){ askGo('What have you built?', 'work', "Flight-critical builds, Angel's Stanford coursework builds, and the history behind them. Decrypting PROJECTS & HISTORY."); });
     bind('ask-skills', function(){ askGo('Your stack?', 'skills', "Enumerating capabilities and coursework. Loading SKILLS & CLASSWORK."); });
     bind('ask-cardio', function(){ askGo('The genomics side?', 'work', "The genomics work — builds and lab history. Loading PROJECTS & HISTORY."); });
     bind('ask-contact', function(){ askGo('How do I reach you?', 'contact', "Opening a channel. Response latency sub-24h. Loading CONTACT."); });
@@ -714,9 +713,9 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
 
   // ---------- free-text responder ----------
   var JOKES = [
-    "I have a cue light I can use when I'm joking, if you like — but résumés don't come with one.",
-    "Everybody good? Plenty of slaves for my systems monster? …Sorry. Humor setting is high.",
-    "I could show you my throughput benchmarks, but I don't want to make the other candidates feel bad."
+    "I have a cue light I can use when I'm joking, if you like.",
+    "Self-destruct sequence in T-minus 10, 9... just kidding.",
+    "Knock knock...you want me to reduce humor level to 55%?"
   ];
   function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
   // Assemble a reply whose register shifts with the HUMOR and HONESTY meters:
@@ -742,43 +741,43 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
     return line;
   }
   function respondAbout(){ return compose(
-    "Angel Ochoa Rodriguez — Stanford Biomedical Computation (BS, 2026) and CS Systems (MS, 2027). I work in bringing AI into cardiovascular genomics and low-latency systems engineering.",
+    "Angel Ochoa Rodriguez — Stanford Biomedical Computation (BS, 2026) and CS Systems (MS, 2027). He works to bring AI into cardiovascular genomics and low-latency systems engineering.",
     {brag:"Angel Ochoa Rodriguez — Stanford student with a B.S. in Biomedical Computation and M.S. in CS Systems. Both sides are equal and critical!",
-     candid:"Still early-career, and I learn fast.", quip:"More coherent than it sounds, I promise."}); }
+     candid:"Still early-career, and he learns fast.", quip:"More coherent than it sounds, I promise."}); }
   function respondProjects(){ return compose(
     "Three flight-critical builds — the Enhancer→Gene Portal (deployed at e2g.stanford.edu), Marimo Agents (a notebook-native LLM agent for rare-disease genetics), and a limit order book matching engine in Go — plus a row of Stanford coursework builds: a heap allocator, a user-level thread dispatcher, locks and condition variables, Clock page replacement, sequence alignment, protein binding-site prediction, and a zoetrope centrifuge.",
     {brag:"Three flight-critical builds, every one shipped: e2g.stanford.edu live in production, Marimo Agents, and a blistering Go matching engine — backed by a deep bench of Stanford systems and comp-bio coursework builds.",
-     candid:"Open the Projects & History module for the full readout.", quip:"I don't list the ones that didn't compile."}); }
+     candid:"Open the Projects & History module for the full readout.", quip:"The builds that didn't compile don't make the list."}); }
   function respondSkills(){ return compose(
     "Go, C, C++, Python, R, TypeScript. Systems: Linux, SLURM, Nextflow, PostgreSQL. ML/Web: PyTorch, LangChain, React, Next.js.",
     {brag:"Name a stack. Go, C, C++, Python, R, TypeScript, SQL, MATLAB; Linux, SLURM, Nextflow, PostgreSQL; PyTorch, LangChain, React, Next.js.",
-     candid:"I don't pad résumés.", quip:"The Classwork section has the receipts."}); }
+     candid:"He doesn't pad résumés.", quip:"The Classwork section has the receipts."}); }
   function respondCardio(){ return compose(
-    "In the Engreitz Lab I run CRISPRi / prime-editing perturbations and build reproducible Python/R pipelines for single-cell Perturb-seq — measuring how variants and enhancers move gene expression across cells.",
-    {brag:"In the Engreitz Lab I drive CRISPRi and prime-editing perturbations end to end and build the Perturb-seq pipelines that turn raw single-cell data into variant-to-expression answers.",
+    "In the Engreitz Lab, Angel runs CRISPRi / prime-editing perturbations and builds reproducible Python/R pipelines for single-cell Perturb-seq — measuring how variants and enhancers move gene expression across cells.",
+    {brag:"In the Engreitz Lab, Angel drives CRISPRi and prime-editing perturbations end to end and builds the Perturb-seq pipelines that turn raw single-cell data into variant-to-expression answers.",
      candid:"It's careful, iterative work — most of it is getting the pipeline reproducible.", quip:"Cells don't care about your deadlines."}); }
   function respondContact(){ return compose(
     "angel8a@stanford.edu, or 707-210-7390. LinkedIn: /in/angel8argz.",
-    {candid:"Response latency: sub-24 hours.", quip:"I don't do cryosleep."}); }
+    {candid:"Response latency: sub-24 hours.", quip:"He doesn't do cryosleep."}); }
   function respondExp(){ return compose(
     "Computational Research Assistant in the Engreitz Lab (Aug 2025–present), earlier a Software Developer there (Jun 2024–Aug 2025), a Sapp Family Fellow at Stanford CS Bio-X (summer 2025), and Team Lead at The Tech Desk (Sep 2024–present).",
-    {candid:"Open the Projects & History module for the full timeline.", quip:"I keep the calendar full."}); }
+    {candid:"Open the Projects & History module for the full timeline.", quip:"He keeps the calendar full."}); }
   function respondEducation(){ return compose(
     "Stanford: Biomedical Computation BS (2026) and CS Systems MS (2027). Coursework in operating systems, computer organization, algorithms, systems biology, and molecular-biology algorithms.",
     {candid:"The Skills & Classwork module lists the relevant courses.", quip:"Yes, plus a good deal of bass guitar playing"}); }
   function respondAwards(){ return compose(
     "Awards in Biodesign NEXT, Bio-X, Hispanic Scholarship Fund, and the Reyes Family Award.",
     {brag:"Four awards and counting: Biodesign NEXT, Bio-X, Hispanic Scholarship Fund, and the Reyes Family Award.",
-     candid:"Grateful for each of them.", quip:"I keep the plaques modest."}); }
+     candid:"He's grateful for each of them.", quip:"He keeps the plaques modest."}); }
 
   function answer(q){
     var s = q.toLowerCase();
     function has(){ for(var i=0;i<arguments.length;i++){ if(s.indexOf(arguments[i])>=0) return true; } return false; }
     if(has('joke','funny','laugh')) return pick(JOKES);
     if(has('who are you','who is','who r ','about you','yourself','tell me about','your name')) return respondAbout();
-    if(has('resume','cv','résumé','curriculum')) return "My résumé PDF is on the Contact module — one click to download. Honesty setting says it's all real.";
+    if(has('resume','cv','résumé','curriculum')) return "Angel's résumé PDF is on the Contact module — one click to download. Honesty setting says it's all real.";
     if(has('project','built','build','portal','matching engine','order book','marimo','e2g','enhancer')) return respondProjects();
-    if(has('class','course','coursework','classwork','transcript','took ','taken','studied')) return "My relevant coursework is in the Skills & Classwork module — systems and algorithms (OS, computer organization, algorithms), computational biology and genomics, and bioengineering and physiology. Open Module 03.";
+    if(has('class','course','coursework','classwork','transcript','took ','taken','studied')) return "Angel's relevant coursework is in the Skills & Classwork module — systems and algorithms (OS, computer organization, algorithms), computational biology and genomics, and bioengineering and physiology. Open Module 03.";
     if(has('stack','skill','language','technolog','tooling','program','code in','framework')) return respondSkills();
     if(has('genomic','cardio','crispr','perturb','biology','dna','gene','variant',' lab','research','engreitz')) return respondCardio();
     if(has('contact','reach','email','phone','hire','linkedin','get in touch')) return respondContact();
@@ -786,11 +785,11 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
     if(has('education','school','study','degree','stanford','major','student','graduat')) return respondEducation();
     if(has('award','honor','scholarship','commendation')) return respondAwards();
     if(has('humor','honesty','setting')) return "Humor's at "+state.humor+"%, honesty at "+state.honesty+"%. Click the meters on the left to adjust — and yes, it changes how I answer.";
-    if(has('hello','hey','yo ','sup','greetings') || s==='hi' || s==='hi.') return "Hello. TARS.OS online. Ask about my research, my builds, my stack, or how to reach me — or just open a module.";
+    if(has('hello','hey','yo ','sup','greetings') || s==='hi' || s==='hi.') return "Hello. TARS.OS online. Ask about Angel's research, his builds, his stack, or how to reach him — or just open a module.";
     if(has('interstellar','tars','movie','robot','film','cooper')) return "Guilty as charged — this interface runs on a TARS affectation. The engineering underneath is real, though.";
     if(has('thank','thanks','cheers')) return "Anytime. That's what I'm here for.";
-    if(has('?')) return "I don't have that in my banks yet — I'm a portfolio unit, not a general intelligence. Try asking about my research, projects, stack, experience, or contact info. Or open a module on the left.";
-    return "Noted, though that's outside my current payload. Ask about my research, projects, stack, experience, or how to reach me — or open a module on the left.";
+    if(has('?')) return "I don't have that in my banks yet — I'm a portfolio unit, not a general intelligence. Try asking about Angel's research, projects, stack, experience, or contact info. Or open a module on the left.";
+    return "Noted, though that's outside my current payload. Ask about Angel's research, projects, stack, experience, or how to reach him — or open a module on the left.";
   }
 
   // ---------- navigation ----------
