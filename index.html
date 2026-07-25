@@ -11,28 +11,29 @@
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#060708; --panel:#0a0c0f; --panel-2:#0b0d10; --panel-3:#12151a;
-  --line:rgba(255,255,255,.08); --line-soft:rgba(255,255,255,.06);
+  --bg:#07080a; --panel:#0b0d10; --panel-2:#0d0f13; --panel-3:#14171c;
+  --line:rgba(255,255,255,.09); --line-soft:rgba(255,255,255,.055);
   --body:#c8ccd2; --head:#f4f2ec; --muted:#8a8f98; --muted-2:#6a7079; --dim:#5a606a; --dimmer:#4a4f57;
   --amber:#f0a500; --amber-deep:#b87a00; --teal:#4fd1c5; --teal-deep:#2a8a80; --green:#7ee787;
   --mono:'JetBrains Mono',ui-monospace,monospace;
   --sans:'IBM Plex Sans',system-ui,sans-serif;
-  --display:'Space Grotesk',system-ui,sans-serif;
-  --sidebar-w:246px;
+  --display:'JetBrains Mono',ui-monospace,monospace;
+  --sidebar-w:252px;
+  --console-w:688px; /* terminal column width — keeps the console from stretching on wide screens */
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{background:var(--bg);color:var(--body);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow:hidden}
 a{color:inherit;text-decoration:none}
 button{font-family:inherit;color:inherit;background:none;border:none;cursor:pointer;padding:0;text-align:left}
-::-webkit-scrollbar{width:9px;height:9px}
-::-webkit-scrollbar-track{background:var(--panel)}
-::-webkit-scrollbar-thumb{background:#23272e;border-radius:5px}
-::-webkit-scrollbar-thumb:hover{background:#30353d}
-:focus-visible{outline:2px solid var(--amber);outline-offset:2px;border-radius:4px}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:#0a0c0e}
+::-webkit-scrollbar-thumb{background:#20242b}
+::-webkit-scrollbar-thumb:hover{background:#2c3138}
+:focus-visible{outline:1px solid var(--amber);outline-offset:2px}
 
 @keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
 @keyframes slabpulse{0%,100%{opacity:.4}50%{opacity:1}}
@@ -42,58 +43,68 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
 @keyframes flick{0%,100%{opacity:1}92%{opacity:1}93%{opacity:.4}94%{opacity:1}}
 @keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 @keyframes msgin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-@keyframes ecgdash{to{stroke-dashoffset:-2400}}
 .fade{animation:fadein .5s ease both}
 
 /* ---------- shell ---------- */
-.shell{position:fixed;inset:0;display:flex;flex-direction:column;
-  background:radial-gradient(140% 120% at 100% 0%,#0d1116 0%,var(--bg) 55%);color:var(--body);overflow:hidden}
+/* Flat near-black. No gradient wash — the depth comes from ruled panels, not glow. */
+.shell{position:fixed;inset:0;display:flex;flex-direction:column;background:var(--bg);color:var(--body);overflow:hidden}
 
 /* ---------- status bar ---------- */
 .status{display:flex;align-items:center;justify-content:space-between;gap:12px;
-  padding:11px 26px;background:var(--panel);border-bottom:1px solid var(--line);flex:none}
-.status .brandwrap{display:flex;align-items:center;gap:12px;min-width:0}
-.slab{display:flex;gap:4px}
-.slab span{width:12px;height:26px;border-radius:2px}
-.slab .off{background:#151922;border:1px solid rgba(240,165,0,.35)}
-.slab .on{background:linear-gradient(180deg,var(--amber),var(--amber-deep));box-shadow:0 0 12px rgba(240,165,0,.6);animation:slabpulse 2.4s ease-in-out infinite}
-.brand{font:700 13px var(--display);color:var(--head);letter-spacing:.04em}
-.unit{font:500 10.5px var(--mono);color:var(--dim);letter-spacing:.1em;white-space:nowrap}
-.status .meta{display:flex;align-items:center;gap:22px;font:500 10.5px var(--mono);color:var(--muted-2);letter-spacing:.1em}
+  padding:0 22px;height:46px;background:var(--panel);border-bottom:1px solid var(--line);flex:none}
+.status .brandwrap{display:flex;align-items:center;gap:14px;min-width:0}
+/* TARS is four hinged rectangular slabs — the mark is literal, and square. */
+.slab{display:flex;gap:3px}
+.slab span{width:9px;height:24px}
+.slab .off{background:#14181f;border:1px solid rgba(240,165,0,.28)}
+.slab .on{background:var(--amber);animation:slabpulse 2.4s ease-in-out infinite}
+.brand{font:800 13px var(--display);color:var(--head);letter-spacing:.12em}
+.unit{font:500 10px var(--mono);color:var(--dim);letter-spacing:.14em;white-space:nowrap;
+  padding-left:14px;border-left:1px solid var(--line)}
+.status .meta{display:flex;align-items:stretch;font:500 10px var(--mono);color:var(--muted-2);letter-spacing:.14em;align-self:stretch}
+.status .meta>span{display:flex;align-items:center;padding:0 18px;border-left:1px solid var(--line)}
 .status .meta .online{color:var(--green);animation:flick 5s infinite}
 
 /* ---------- body split ---------- */
 .split{flex:1;display:flex;min-height:0}
 
 /* ---------- sidebar ---------- */
-.sidebar{width:var(--sidebar-w);flex:none;background:#080a0c;border-right:1px solid var(--line);
-  display:flex;flex-direction:column;padding:22px 16px;overflow-y:auto}
-.sb-label{font:500 10px var(--mono);color:var(--dim);letter-spacing:.2em;padding:0 8px 14px}
-.modules{display:flex;flex-direction:column;gap:3px}
-.mod{display:flex;align-items:center;gap:12px;width:100%;padding:11px 10px;border-radius:7px;
-  border-left:2px solid transparent;background:transparent;transition:background .18s,border-color .18s}
+.sidebar{width:var(--sidebar-w);flex:none;background:#090a0d;border-right:1px solid var(--line);
+  display:flex;flex-direction:column;padding:0;overflow-y:auto}
+.sb-label{font:500 9.5px var(--mono);color:var(--dim);letter-spacing:.24em;padding:16px 18px 12px;
+  border-bottom:1px solid var(--line-soft)}
+.modules{display:flex;flex-direction:column}
+/* Flush-mounted rows with a ruled index gutter — a manifest, not a stack of cards. */
+.mod{display:grid;grid-template-columns:30px 1fr;align-items:center;gap:0;width:100%;padding:13px 18px;
+  border-bottom:1px solid var(--line-soft);background:transparent;
+  box-shadow:inset 2px 0 0 transparent;transition:background .14s,box-shadow .14s}
 .mod:hover{background:var(--panel-3)}
-.mod .code{font:700 10px var(--mono);color:var(--dim);width:26px;transition:color .18s}
-.mod .name{font:500 13.5px var(--display);color:var(--body);transition:color .18s}
-.mod[aria-current="page"]{background:var(--panel-3);border-left-color:var(--amber)}
+.mod .code{font:700 9.5px var(--mono);color:var(--dimmer);letter-spacing:.1em;transition:color .14s}
+.mod .name{font:500 12.5px var(--display);color:var(--body);letter-spacing:.02em;transition:color .14s}
+.mod[aria-current="page"]{background:var(--panel-3);box-shadow:inset 2px 0 0 var(--amber)}
 .mod[aria-current="page"] .code{color:var(--amber)}
 .mod[aria-current="page"] .name{color:var(--head)}
-.settings{margin-top:auto;padding-top:20px;border-top:1px solid var(--line-soft);display:flex;flex-direction:column;gap:16px}
-.meter-head{display:flex;justify-content:space-between;margin-bottom:7px;font:500 11px var(--mono)}
+.settings{margin-top:auto;padding:18px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:18px}
+.meter-head{display:flex;justify-content:space-between;margin-bottom:7px;font:500 9.5px var(--mono);letter-spacing:.16em}
 .meter-head .lab{color:var(--muted)}
-.meter-btn{display:block;width:100%;height:7px;background:#161a20;border-radius:4px;overflow:hidden}
-.meter-fill{display:block;height:100%;transition:width .3s ease}
-.meter-fill.humor{background:linear-gradient(90deg,var(--amber-deep),var(--amber))}
-.meter-fill.honesty{background:linear-gradient(90deg,var(--teal-deep),var(--teal))}
-.quip{font:400 10.5px/1.5 var(--mono);color:var(--dimmer);padding-top:4px;min-height:2.4em}
+/* Segmented readout: a flat fill with notches carved out on top, like a bar-graph LED. */
+.meter-btn{position:relative;display:block;width:100%;height:11px;background:#15181e;
+  border:1px solid var(--line-soft);overflow:hidden}
+.meter-btn::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(90deg,transparent 0 7px,#090a0d 7px 9px)}
+.meter-fill{display:block;height:100%;transition:width .25s ease}
+.meter-fill.humor{background:var(--amber)}
+.meter-fill.honesty{background:var(--teal)}
+.quip{font:400 10px/1.6 var(--mono);color:var(--dimmer);min-height:3.2em;
+  padding-top:14px;border-top:1px solid var(--line-soft)}
 
 /* ---------- main ---------- */
 .main{flex:1;position:relative;overflow-y:auto;min-width:0}
-.page{padding:44px 56px 90px}
-.eyebrow{font:500 11px var(--mono);color:var(--dim);letter-spacing:.2em;margin-bottom:8px}
-.page h2{font:700 36px var(--display);color:var(--head);margin:0 0 28px;letter-spacing:-.01em}
+.page{padding:38px 48px 90px;max-width:940px}
+.eyebrow{font:500 9.5px var(--mono);color:var(--dim);letter-spacing:.26em;margin-bottom:10px}
+.page h2{font:800 27px var(--display);color:var(--head);margin:0 0 30px;letter-spacing:.01em;text-transform:uppercase}
 .page h2:focus{outline:none}
-.lead{font:400 17px/1.7 var(--sans);color:#b0b5bd;max-width:680px;margin:0 0 40px}
+.lead{font:400 16px/1.72 var(--sans);color:#adb2ba;max-width:660px;margin:0 0 38px}
 
 /* ---------- overlays ---------- */
 .overlay-boot{position:absolute;inset:0;z-index:60;background:#050506;display:flex;flex-direction:column;
@@ -104,129 +115,155 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
 .ok{color:var(--green)}
 .cursor{display:inline-block;width:8px;height:14px;background:var(--amber);margin-left:6px;vertical-align:middle;animation:blink 1s step-end infinite}
 
-.overlay-load{position:absolute;inset:0;z-index:40;background:rgba(6,7,8,.96);
+.overlay-load{position:absolute;inset:0;z-index:40;background:rgba(7,8,10,.97);
   display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:hidden}
-.scan{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(240,165,0,.5),transparent);animation:scanline 1.3s linear infinite}
-.load-title{font:700 12px var(--mono);color:var(--amber);letter-spacing:.28em;margin-bottom:20px}
-.load-bar{width:340px;max-width:70vw;height:6px;background:#161a20;border-radius:4px;overflow:hidden;margin-bottom:16px}
-.load-bar>div{height:100%;background:linear-gradient(90deg,var(--amber-deep),var(--amber));animation:loadfill 1.15s ease-out both}
-.load-sub{font:400 11px var(--mono);color:var(--dim)}
+.scan{position:absolute;left:0;right:0;height:1px;background:rgba(240,165,0,.4);animation:scanline 1.3s linear infinite}
+.load-title{font:700 11px var(--mono);color:var(--amber);letter-spacing:.3em;margin-bottom:18px}
+.load-bar{position:relative;width:300px;max-width:70vw;height:11px;background:#15181e;
+  border:1px solid rgba(240,165,0,.25);overflow:hidden;margin-bottom:16px}
+.load-bar>div{height:100%;background:var(--amber);animation:loadfill 1.15s ease-out both}
+.load-bar::after{content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(90deg,transparent 0 7px,#07080a 7px 9px)}
+.load-sub{font:400 10.5px var(--mono);color:var(--dim);letter-spacing:.08em}
 
 /* ---------- home / terminal ---------- */
-.home{min-height:100%;display:flex;flex-direction:column;padding:34px 44px 30px}
-.masthead{position:relative;margin-bottom:26px}
-.ecg{position:absolute;right:0;top:-6px;width:300px;max-width:45%;height:80px;opacity:.4;pointer-events:none}
-.ecg polyline{animation:ecgdash 6s linear infinite;filter:drop-shadow(0 0 4px rgba(240,165,0,.5))}
-.kicker{font:500 11px var(--mono);color:var(--amber);letter-spacing:.24em;margin-bottom:14px}
-.masthead h1{font:700 40px/1.05 var(--display);color:var(--head);margin:0;letter-spacing:-.02em}
-.log{flex:1;display:flex;flex-direction:column;gap:15px;font-family:var(--mono);min-height:200px}
-.msg{display:flex;gap:12px;animation:msgin .35s ease both}
-.msg .who{font:700 12px var(--mono);flex:none}
-.msg .text{font:400 14px/1.6 var(--mono);color:var(--body);max-width:640px}
+.home{min-height:100%;display:flex;flex-direction:column;padding:0 0 26px}
+.masthead{display:flex;align-items:flex-start;justify-content:space-between;gap:40px;
+  padding:32px 44px 26px;border-bottom:1px solid var(--line);margin-bottom:26px}
+.nameplate{min-width:0}
+.kicker{font:500 9.5px var(--mono);color:var(--amber);letter-spacing:.26em;margin-bottom:13px}
+/* Nameplate: mono, heavy, stamped. Uppercased in CSS so the markup keeps real casing. */
+.masthead h1{font:800 31px/1.1 var(--display);color:var(--head);margin:0;letter-spacing:.005em;text-transform:uppercase}
+/* Dense spec readout — replaces decorative chrome with actual information. */
+.specs{flex:none;display:grid;grid-template-columns:auto auto;gap:0 18px;padding-top:4px}
+.specs dt{font:500 9.5px/1.9 var(--mono);color:var(--dimmer);letter-spacing:.16em;white-space:nowrap}
+.specs dd{font:500 9.5px/1.9 var(--mono);color:var(--muted);margin:0;letter-spacing:.05em;white-space:nowrap}
+.specs dd b{color:var(--amber);font-weight:500}
+
+.log{flex:1;display:flex;flex-direction:column;gap:16px;font-family:var(--mono);min-height:180px;padding:0 44px}
+.msg{display:flex;gap:14px;animation:msgin .35s ease both}
+.msg .who{font:700 10px var(--mono);flex:none;letter-spacing:.14em;padding-top:4px;width:34px}
+.msg .text{font:400 13.5px/1.68 var(--mono);color:var(--body);max-width:640px}
 .msg.tars .who{color:var(--amber);order:0}
 .msg.you{justify-content:flex-end}
-.msg.you .who{color:var(--teal);order:1}
+.msg.you .who{color:var(--teal);order:1;text-align:right}
 .msg.you .text{max-width:560px;text-align:right}
-.typing{display:flex;gap:12px;align-items:center}
-.typing .who{color:var(--amber);font:700 12px var(--mono)}
-.typing .car{width:8px;height:15px;background:var(--amber);animation:blink 1s step-end infinite}
-.asks{display:flex;flex-wrap:wrap;gap:9px;margin-top:24px;padding-top:22px;border-top:1px solid var(--line-soft)}
-.chip{padding:9px 15px;background:var(--panel-3);border:1px solid rgba(255,255,255,.12);border-radius:20px;
-  font:500 12.5px var(--mono);color:var(--body);transition:border-color .18s,color .18s}
-.chip:hover{border-color:var(--amber);color:var(--amber)}
-.chip.accent{border-color:rgba(240,165,0,.3);color:var(--amber)}
-.chip.reset{border-color:rgba(255,255,255,.1);color:var(--muted-2)}
-.prompt{display:flex;align-items:center;gap:10px;margin-top:16px;padding:12px 16px;background:var(--panel-2);
-  border:1px solid var(--line);border-radius:10px;transition:border-color .18s}
-.prompt:focus-within{border-color:rgba(240,165,0,.5)}
-.prompt .ps1{font:700 13px var(--mono);color:var(--amber);flex:none}
-.prompt input{flex:1;background:none;border:none;outline:none;color:var(--body);font:400 14px var(--mono);min-width:0}
+.typing{display:flex;gap:14px;align-items:center}
+.typing .who{color:var(--amber);font:700 10px var(--mono);letter-spacing:.14em;width:34px}
+.typing .car{width:7px;height:14px;background:var(--amber);animation:blink 1s step-end infinite}
+
+/* Chips read as a bank of labelled keys: square, gridded, flush against each other. */
+.asks{display:grid;grid-template-columns:repeat(3,1fr);margin:26px 44px 0;max-width:var(--console-w);
+  border:1px solid var(--line);border-bottom:none}
+.chip{padding:12px 16px;background:var(--panel-2);border:0;border-right:1px solid var(--line);
+  border-bottom:1px solid var(--line);font:500 11.5px var(--mono);color:var(--muted);letter-spacing:.03em;
+  transition:background .14s,color .14s}
+.chip:nth-child(3n),.chip.reset{border-right:none}
+.chip:hover{background:var(--panel-3);color:var(--head)}
+.chip.accent{color:var(--amber)}
+.chip.accent:hover{color:var(--amber);background:rgba(240,165,0,.07)}
+.chip.reset{grid-column:1/-1;color:var(--dimmer);text-align:right}
+.prompt{display:flex;align-items:stretch;margin:0 44px;max-width:var(--console-w);background:var(--panel-2);
+  border:1px solid var(--line);border-top:none;transition:box-shadow .14s}
+.prompt:focus-within{box-shadow:inset 0 -1px 0 var(--amber)}
+.prompt .ps1{font:700 13px var(--mono);color:var(--amber);flex:none;display:flex;align-items:center;padding:0 0 0 16px}
+.prompt input{flex:1;background:none;border:none;outline:none;color:var(--body);font:400 13.5px var(--mono);
+  min-width:0;padding:14px 14px}
 .prompt input::placeholder{color:var(--dim)}
-.prompt .send{font:600 11px var(--mono);color:var(--muted-2);letter-spacing:.1em;flex:none;padding:6px 10px;border:1px solid var(--line);border-radius:6px;transition:border-color .18s,color .18s}
-.prompt .send:hover{border-color:var(--amber);color:var(--amber)}
+.prompt .send{font:700 10px var(--mono);color:var(--muted-2);letter-spacing:.18em;flex:none;padding:0 20px;
+  border-left:1px solid var(--line);transition:background .14s,color .14s}
+.prompt .send:hover{background:rgba(240,165,0,.08);color:var(--amber)}
 
 /* ---------- about ---------- */
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.track{background:var(--panel-2);border-radius:10px;padding:28px}
-.track.genomics{border:1px solid rgba(79,209,197,.25)}
-.track.systems{border:1px solid rgba(240,165,0,.25)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line)}
+.track{background:var(--panel-2);padding:26px 28px}
+.track.systems{border-left:1px solid var(--line)}
+/* Track identity carried by a top rule, not a full colored outline. */
+.track.genomics{box-shadow:inset 0 2px 0 var(--teal)}
+.track.systems{box-shadow:inset 0 2px 0 var(--amber)}
 .track .th{display:flex;align-items:center;gap:9px;margin-bottom:14px}
-.dot{width:8px;height:8px;border-radius:50%}
-.track .tl{font:600 12px var(--mono);letter-spacing:.1em}
+.dot{width:6px;height:6px}
+.track .tl{font:700 10px var(--mono);letter-spacing:.18em}
 .track.genomics .tl{color:var(--teal)}
 .track.genomics .dot{background:var(--teal)}
 .track.systems .tl{color:var(--amber)}
 .track.systems .dot{background:var(--amber)}
-.track p{font:400 14.5px/1.65 var(--sans);color:#9aa0a8;margin:0}
-.stats{margin-top:34px;display:flex;gap:34px;flex-wrap:wrap}
-.stat .n{font:700 28px var(--display);color:var(--head)}
-.stat .k{font:500 11px var(--mono);color:var(--muted-2)}
+.track p{font:400 14px/1.68 var(--sans);color:#9aa0a8;margin:0}
+/* Tabular readout rather than an oversized big-number stat row. */
+.stats{margin-top:0;display:flex;flex-wrap:wrap;border:1px solid var(--line);border-top:none}
+.stat{flex:1 1 auto;padding:14px 20px;border-right:1px solid var(--line);background:var(--panel-2)}
+.stat:last-child{border-right:none}
+.stat .k{font:500 9.5px var(--mono);color:var(--dimmer);letter-spacing:.18em;margin-bottom:5px}
+.stat .n{font:700 13px var(--display);color:var(--head);letter-spacing:.04em}
 
 /* ---------- projects ---------- */
-.cards{display:flex;flex-direction:column;gap:14px}
-.card{width:100%;background:var(--panel-2);border:1px solid var(--line-soft);border-radius:10px;overflow:hidden;transition:border-color .18s}
-.card:hover{border-color:rgba(240,165,0,.4)}
-.card[aria-expanded="true"]{border-color:rgba(240,165,0,.45)}
-.card-head{display:grid;grid-template-columns:76px 1fr auto;gap:20px;align-items:center;width:100%;padding:22px 26px}
-.card-head .pc{font:700 14px var(--mono);color:var(--amber)}
-.card-head .pn{display:block;font:600 19px var(--display);color:var(--head);margin-bottom:4px}
-.card-head .pstack{display:block;font:500 11.5px var(--mono);color:var(--muted-2)}
-.card-head .icon{font:400 20px var(--mono);color:#4a5058}
-.card-body{padding:0 26px 24px 122px;border-top:1px solid var(--line-soft)}
-.card-body p{font:400 14.5px/1.7 var(--sans);color:#a0a6ae;margin:16px 0 0;max-width:640px}
-.card-links{display:flex;flex-wrap:wrap;gap:14px;margin-top:16px}
-.card-links a{font:600 12px var(--mono);color:var(--amber);letter-spacing:.05em;border-bottom:1px solid rgba(240,165,0,.35);padding-bottom:2px;transition:opacity .18s}
-.card-links a:hover{opacity:.7}
-.card-meta{font:500 11px var(--mono);color:var(--muted-2);margin-top:14px;letter-spacing:.04em}
+/* One framed manifest; rows divided by hairlines instead of a stack of floating cards. */
+.cards{display:flex;flex-direction:column;border:1px solid var(--line)}
+.card{width:100%;background:var(--panel-2);border-bottom:1px solid var(--line-soft);
+  box-shadow:inset 2px 0 0 transparent;transition:box-shadow .14s,background .14s}
+.cards .card:last-child{border-bottom:none}
+.card:hover{background:var(--panel-3)}
+.card[aria-expanded="true"]{background:var(--panel-3);box-shadow:inset 2px 0 0 var(--amber)}
+.card-head{display:grid;grid-template-columns:62px 1fr auto;gap:18px;align-items:center;width:100%;padding:17px 22px}
+.card-head .pc{font:700 10.5px var(--mono);color:var(--amber);letter-spacing:.1em}
+.card-head .pn{display:block;font:600 15px var(--display);color:var(--head);margin-bottom:5px;letter-spacing:.01em}
+.card-head .pstack{display:block;font:500 10.5px var(--mono);color:var(--muted-2);letter-spacing:.04em}
+.card-head .icon{font:400 15px var(--mono);color:#4a5058}
+.card-body{padding:0 22px 22px 102px;border-top:1px solid var(--line-soft)}
+.card-body p{font:400 14px/1.72 var(--sans);color:#a0a6ae;margin:18px 0 0;max-width:660px}
+.card-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.card-links a{font:700 10px var(--mono);color:var(--amber);letter-spacing:.14em;
+  padding:8px 14px;border:1px solid rgba(240,165,0,.3);transition:background .14s}
+.card-links a:hover{background:rgba(240,165,0,.1)}
+.card-meta{font:500 9.5px var(--mono);color:var(--dimmer);margin-top:16px;letter-spacing:.16em}
 
 /* ---------- experience timeline ---------- */
-.timeline{position:relative;padding-left:34px}
-.timeline .rail{position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:linear-gradient(180deg,var(--amber),rgba(240,165,0,.1))}
-.event{position:relative;margin-bottom:32px}
-.event .node{position:absolute;left:-34px;top:4px;width:16px;height:16px;border-radius:50%;background:var(--bg);border:2px solid var(--amber);box-shadow:0 0 10px rgba(240,165,0,.5)}
-.event .date{font:500 11px var(--mono);color:var(--amber);letter-spacing:.06em;margin-bottom:6px}
-.event .role{font:600 19px var(--display);color:var(--head)}
-.event .org{font:500 13px var(--sans);color:#7a808a;margin:2px 0 10px}
-.event p{font:400 14px/1.65 var(--sans);color:#9aa0a8;margin:0;max-width:640px}
+.timeline{position:relative;padding-left:30px}
+.timeline .rail{position:absolute;left:3px;top:5px;bottom:5px;width:1px;background:var(--line)}
+.event{position:relative;margin-bottom:30px}
+.event:last-child{margin-bottom:0}
+/* Square registration tick on the rail — no glowing bubble. */
+.event .node{position:absolute;left:-30px;top:5px;width:7px;height:7px;background:var(--amber)}
+.event .date{font:500 9.5px var(--mono);color:var(--amber);letter-spacing:.18em;margin-bottom:8px}
+.event .role{font:600 15px var(--display);color:var(--head);letter-spacing:.01em}
+.event .org{font:500 12.5px var(--sans);color:#7a808a;margin:3px 0 10px}
+.event p{font:400 14px/1.7 var(--sans);color:#9aa0a8;margin:0;max-width:660px}
 
 /* ---------- skills ---------- */
-.groups{display:flex;flex-direction:column;gap:26px}
-.section-head{font:700 11px var(--mono);color:var(--amber);letter-spacing:.24em;margin:0 0 22px;padding-bottom:10px;border-bottom:1px solid var(--line-soft)}
-.section-head.second{margin-top:46px}
-.group .gt{font:600 12px var(--mono);letter-spacing:.14em;margin-bottom:14px}
-.tag .cc{color:var(--muted-2);margin-right:2px}
-.tags{display:flex;flex-wrap:wrap;gap:9px}
-.tag{padding:9px 15px;background:var(--panel-2);border:1px solid rgba(255,255,255,.12);border-radius:6px;font:500 13px var(--mono);color:var(--body)}
-
-/* ---------- log ---------- */
-.posts{display:flex;flex-direction:column;gap:12px}
-.post{width:100%;background:var(--panel-2);border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:22px 26px;
-  display:flex;justify-content:space-between;align-items:center;gap:20px;transition:border-color .18s}
-.post:hover{border-color:rgba(240,165,0,.4)}
-.post .pt{font:600 17px var(--display);color:var(--head);margin-bottom:5px}
-.post .pe{font:400 13px var(--sans);color:#7a808a}
-.post .pd{font:500 11px var(--mono);color:var(--muted-2);flex:none}
+.groups{display:flex;flex-direction:column;gap:24px}
+/* Section rule with an amber end-cap tick — a header that looks machined. */
+.section-head{position:relative;font:700 9.5px var(--mono);color:var(--amber);letter-spacing:.26em;
+  margin:0 0 20px;padding-bottom:11px;border-bottom:1px solid var(--line)}
+.section-head::after{content:'';position:absolute;left:0;bottom:-1px;width:34px;height:1px;background:var(--amber)}
+.section-head.second{margin-top:44px}
+.group .gt{font:700 9.5px var(--mono);letter-spacing:.2em;margin-bottom:12px}
+.tag .cc{color:var(--dimmer);margin-right:4px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{padding:8px 13px;background:var(--panel-2);border:1px solid var(--line);
+  font:500 11.5px var(--mono);color:var(--body);letter-spacing:.02em}
 
 /* ---------- contact ---------- */
-.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:680px}
-.ccard{background:var(--panel-2);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:24px;display:block;transition:border-color .18s}
-.ccard:hover{border-color:var(--teal)}
-.ccard.email{border-color:rgba(240,165,0,.3)}
-.ccard.email:hover{border-color:var(--amber)}
-.ccard .cl{font:500 11px var(--mono);color:var(--muted-2);letter-spacing:.1em;margin-bottom:8px}
-.ccard .cv{font:600 16px var(--display);color:var(--head);word-break:break-word}
-.awards{margin-top:36px;max-width:680px}
-.awards .at{font:600 12px var(--mono);color:var(--amber);letter-spacing:.14em;margin-bottom:14px}
-.resume-row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:34px}
-.btn-primary{display:inline-flex;align-items:center;gap:9px;padding:12px 20px;background:rgba(240,165,0,.08);
-  border:1px solid rgba(240,165,0,.4);border-radius:8px;font:600 12.5px var(--mono);color:var(--amber);letter-spacing:.06em;transition:background .18s}
-.btn-primary:hover{background:rgba(240,165,0,.16)}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;max-width:680px;border:1px solid var(--line)}
+.ccard{background:var(--panel-2);padding:20px 22px;display:block;
+  border-right:1px solid var(--line);border-bottom:1px solid var(--line);transition:background .14s}
+.ccard:nth-child(2n){border-right:none}
+.ccard:nth-last-child(-n+2){border-bottom:none}
+.ccard:hover{background:var(--panel-3)}
+.ccard.email{box-shadow:inset 2px 0 0 var(--amber)}
+.ccard .cl{font:500 9.5px var(--mono);color:var(--dimmer);letter-spacing:.2em;margin-bottom:9px}
+.ccard .cv{font:600 13.5px var(--display);color:var(--head);word-break:break-word;letter-spacing:.01em}
+.awards{margin-top:38px;max-width:680px}
+.awards .at{font:700 9.5px var(--mono);color:var(--amber);letter-spacing:.26em;margin-bottom:13px}
+.resume-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:30px}
+.btn-primary{display:inline-flex;align-items:center;gap:10px;padding:12px 20px;background:rgba(240,165,0,.07);
+  border:1px solid rgba(240,165,0,.35);font:700 10px var(--mono);color:var(--amber);letter-spacing:.2em;transition:background .14s}
+.btn-primary:hover{background:rgba(240,165,0,.15)}
 
 /* ---------- back button ---------- */
-.back{position:absolute;bottom:22px;right:26px;z-index:30;display:flex;align-items:center;gap:9px;
-  padding:11px 18px;background:#0e1116;border:1px solid rgba(240,165,0,.35);border-radius:8px;
-  font:600 12px var(--mono);color:var(--amber);box-shadow:0 8px 24px rgba(0,0,0,.5);transition:background .18s}
-.back:hover{background:#151a20}
+.back{position:absolute;bottom:0;right:0;z-index:30;display:flex;align-items:center;gap:10px;
+  padding:13px 22px;background:var(--panel-3);border:1px solid var(--line);border-right:none;border-bottom:none;
+  font:700 10px var(--mono);color:var(--amber);letter-spacing:.2em;transition:background .14s}
+.back:hover{background:rgba(240,165,0,.1)}
 
 .hidden{display:none !important}
 
@@ -234,27 +271,42 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
 @media (max-width:820px){
   body{overflow:auto}
   .shell{position:relative;min-height:100vh}
-  .status{padding:10px 16px;flex-wrap:wrap;gap:8px}
-  .status .meta{gap:14px}
+  .status{padding:0 14px;height:auto;min-height:44px;flex-wrap:wrap}
+  .status .meta{font-size:9px}
+  .status .meta>span{padding:0 11px}
   .split{flex-direction:column}
-  .sidebar{width:100%;flex-direction:row;flex-wrap:nowrap;overflow-x:auto;padding:12px;
-    border-right:none;border-bottom:1px solid var(--line);gap:8px;align-items:center}
+  .sidebar{width:100%;flex-direction:row;flex-wrap:nowrap;overflow-x:auto;padding:0;
+    border-right:none;border-bottom:1px solid var(--line);align-items:stretch}
   .sb-label{display:none}
-  .modules{flex-direction:row;gap:6px}
-  .mod{border-left:none;border-bottom:2px solid transparent;border-radius:7px;padding:9px 12px;white-space:nowrap}
-  .mod[aria-current="page"]{border-left:none;border-bottom-color:var(--amber)}
-  .settings{margin-top:0;padding-top:0;border-top:none;flex-direction:row;align-items:center;gap:14px;flex:none}
-  .meterbox{min-width:96px}
+  .modules{flex-direction:row}
+  /* Horizontal tab strip: the active marker moves from the left edge to the bottom. */
+  .mod{border-bottom:none;border-right:1px solid var(--line-soft);padding:11px 15px;white-space:nowrap;
+    box-shadow:inset 0 -2px 0 transparent}
+  .mod[aria-current="page"]{box-shadow:inset 0 -2px 0 var(--amber)}
+  .settings{margin-top:0;padding:10px 14px;border-top:none;border-left:1px solid var(--line);
+    flex-direction:row;align-items:center;gap:14px;flex:none}
+  .meterbox{min-width:88px}
   .quip{display:none}
   .main{overflow:visible}
-  .home,.page{padding:24px 18px 60px}
-  .masthead h1{font-size:30px}
-  .ecg{display:none}
-  .page h2{font-size:28px}
+  .page{padding:24px 18px 70px}
+  .masthead{flex-direction:column;gap:20px;padding:24px 18px 20px}
+  .masthead h1{font-size:23px}
+  .specs{display:none}
+  .log{padding:0 18px;min-height:120px}
+  .asks{margin:22px 18px 0;grid-template-columns:repeat(2,1fr)}
+  .chip{white-space:normal;font-size:11px;padding:11px 13px}
+  .chip:nth-child(3n){border-right:1px solid var(--line)}
+  .chip:nth-child(2n){border-right:none}
+  .prompt{margin:0 18px}
+  .page h2{font-size:21px}
   .grid2,.contact-grid{grid-template-columns:1fr}
-  .card-head{grid-template-columns:52px 1fr auto;gap:12px;padding:18px}
-  .card-body{padding:0 18px 20px 18px}
-  .back{bottom:14px;right:14px}
+  .track.systems{border-left:none;border-top:1px solid var(--line)}
+  .ccard{border-right:none}
+  .ccard:nth-last-child(-n+2){border-bottom:1px solid var(--line)}
+  .ccard:last-child{border-bottom:none}
+  .stat{flex:1 1 44%}
+  .card-head{grid-template-columns:52px 1fr auto;gap:12px;padding:15px 16px}
+  .card-body{padding:0 16px 18px 16px}
 }
 
 @media (prefers-reduced-motion:reduce){
@@ -284,11 +336,11 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
     <div class="brandwrap">
       <div class="slab" aria-hidden="true"><span class="off"></span><span class="on"></span><span class="off"></span></div>
       <span class="brand">TARS.OS</span>
-      <span class="unit">UNIT A.OCHOA · v2.6</span>
+      <span class="unit">UNIT A.OCHOA · v3.2</span>
     </div>
     <div class="meta">
       <span>STANFORD, CA</span>
-      <span>HUMOR <span id="statusHumor">75</span>%</span>
+      <span>HUMOR&nbsp;<span id="statusHumor">75</span>%</span>
       <span class="online">◉ ONLINE</span>
     </div>
   </header>
@@ -340,8 +392,7 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
     email:'angel8a@stanford.edu',
     phone:'707-210-7390',
     linkedin:'https://www.linkedin.com/in/angel8argz/',
-    website:'https://angel8argz.github.io/about/',
-    resume:'assets/Angel_Ochoa_Rodriguez_CV.pdf'
+    website:'https://angel8argz.github.io/about/'
   };
   var NAV = [
     {id:'01',key:'about',label:'About'},
@@ -443,7 +494,9 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
   var AWARDS =['Biodesign NEXT Award','Bio-X Award','Hispanic Scholarship Fund Award','Reyes Family Award'];
 
   // ---------- state ----------
-  var state = {view:'home',loading:false,target:'',humor:75,honesty:90,openProj:null,messages:[]};
+  var state = {view:'home',loading:false,target:'',humor:75,honesty:90,openProj:null,messages:[],
+    lastIntent:null,   // for "tell me more" follow-ups
+    fbIdx:0};          // rotates the fallback lines so repeats don't feel canned
   var timers = [];
   var typer = null;
   function clearTimers(){ timers.forEach(clearTimeout); timers = []; }
@@ -496,10 +549,15 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
     var msgs = state.messages.map(messageHTML).join('');
     return '<div class="home fade">'
       + '<div class="masthead">'
-      +   '<div class="ecg" aria-hidden="true"><svg width="100%" height="100%" viewBox="0 0 300 80" preserveAspectRatio="none">'
-      +     '<polyline points="0,40 90,40 100,40 108,18 118,64 128,8 140,70 150,40 168,40 300,40" fill="none" stroke="#f0a500" stroke-width="2" stroke-dasharray="2400"></polyline></svg></div>'
-      +   '<div class="kicker">CARDIOVASCULAR&nbsp;RESEARCH&nbsp;×&nbsp;ML&nbsp;SYSTEMS</div>'
-      +   '<h1>Angel Ochoa Rodriguez</h1>'
+      +   '<div class="nameplate">'
+      +     '<div class="kicker">CARDIOVASCULAR&nbsp;RESEARCH&nbsp;×&nbsp;ML&nbsp;SYSTEMS</div>'
+      +     '<h1>Angel Ochoa Rodriguez</h1>'
+      +   '</div>'
+      +   '<dl class="specs">'
+      +     '<dt>PROGRAM</dt><dd>BS BIOMEDICAL COMPUTATION <b>&rsquo;26</b><br>MS CS SYSTEMS <b>&rsquo;27</b></dd>'
+      +     '<dt>POST</dt><dd>ENGREITZ LAB &middot; STANFORD MEDICINE</dd>'
+      +     '<dt>LOCUS</dt><dd>37.4275&deg; N &middot; 122.1697&deg; W</dd>'
+      +   '</dl>'
       + '</div>'
       + '<div class="log" id="log" role="log" aria-live="polite" aria-label="TARS terminal">'
       +   '<div class="msg tars"><span class="who">TARS</span><span class="text">Angel Ochoa. Stanford Biomedical Computation + CS Systems. Two vectors — cardiovascular genomics and low-latency systems. Ask me anything, or open a module on the left. Humor '+state.humor+'%, honesty '+state.honesty+'%.</span></div>'
@@ -531,9 +589,9 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
       +   '<div class="track systems"><div class="th"><span class="dot"></span><span class="tl">TRACK 02 · SYSTEMS</span></div><p>Low-latency matching engines in Go, notebook-native LLM agents, and firmware/OS images that provision device fleets — built for throughput and reproducibility.</p></div>'
       + '</div>'
       + '<div class="stats">'
-      +   '<div class="stat"><div class="n">4</div><div class="k">AWARDS</div></div>'
-      +   '<div class="stat"><div class="n">2</div><div class="k">DEGREES</div></div>'
-      +   '<div class="stat"><div class="n">EN/ES</div><div class="k">BILITERATE</div></div>'
+      +   '<div class="stat"><div class="k">DEGREES</div><div class="n">BS &rsquo;26 &middot; MS &rsquo;27</div></div>'
+      +   '<div class="stat"><div class="k">COMMENDATIONS</div><div class="n">4 AWARDS</div></div>'
+      +   '<div class="stat"><div class="k">LANGUAGES</div><div class="n">EN &middot; ES BILITERATE</div></div>'
       + '</div>');
   }
 
@@ -591,7 +649,7 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
     var awards = AWARDS.map(function(a){ return '<span class="tag">'+esc(a)+'</span>'; }).join('');
     return page('04','Open a channel',
       '<p class="lead" style="font-size:16px;color:#9aa0a8;max-width:520px;margin-bottom:28px">Response latency: sub-24 hours. He doesn\'t do cryosleep.</p>'
-      + '<div class="resume-row"><a class="btn-primary" href="'+LINKS.resume+'" download>⇩ DOWNLOAD RÉSUMÉ · PDF</a></div>'
+      + '<div class="resume-row"><a class="btn-primary" href="'+LINKS.linkedin+'" target="_blank" rel="noopener">↗ FULL PROFILE · LINKEDIN</a></div>'
       + '<div class="contact-grid">'
       +   '<a class="ccard email" href="mailto:'+LINKS.email+'"><div class="cl">EMAIL</div><div class="cv">'+LINKS.email+'</div></a>'
       +   '<a class="ccard" href="tel:+17072107390"><div class="cl">PHONE</div><div class="cv">'+LINKS.phone+'</div></a>'
@@ -650,7 +708,7 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
     bind('ask-cardio', function(){ askGo('The genomics side?', 'work', "The genomics work — builds and lab history. Loading PROJECTS & HISTORY."); });
     bind('ask-contact', function(){ askGo('How do I reach you?', 'contact', "Opening a channel. Response latency sub-24h. Loading CONTACT."); });
     bind('ask-joke', function(){ ask('Tell a joke', jokeLine()); });
-    bind('ask-reset', function(){ state.messages = []; render(); focusInput(); });
+    bind('ask-reset', resetLog);
     var form = $('promptForm');
     if(form){
       form.addEventListener('submit', function(e){
@@ -672,6 +730,21 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
     state.messages.push({who:'YOU',text:q});
     appendMsg({who:'YOU',text:q});
     typeReply(text);
+    ensureReset();
+  }
+  function resetLog(){ state.messages = []; state.lastIntent = null; render(); focusInput(); }
+  // Typed questions append to the log without a full re-render, so the reset control
+  // has to be inserted on the fly the first time the transcript becomes non-empty.
+  function ensureReset(){
+    var asks = document.querySelector('.asks');
+    if(!asks || $('ask-reset')) return;
+    var b = document.createElement('button');
+    b.className = 'chip reset';
+    b.type = 'button';
+    b.id = 'ask-reset';
+    b.textContent = '↺ reset';
+    b.addEventListener('click', resetLog);
+    asks.appendChild(b);
   }
   // ask a preset question, then run the ACCESSING ceremony into a subpage
   function askGo(question, view, ack){
@@ -770,26 +843,229 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
     {brag:"Four awards and counting: Biodesign NEXT, Bio-X, Hispanic Scholarship Fund, and the Reyes Family Award.",
      candid:"He's grateful for each of them.", quip:"He keeps the plaques modest."}); }
 
+  // Additional topics. Everything asserted here is grounded in the data above —
+  // where the answer isn't known, TARS says so rather than inventing one.
+  function respondCoursework(){ return compose(
+    "Three benches of Stanford coursework: systems and algorithms (CS 107, 111, 161, 106B, 103, 109, 148, MATH 51), computational biology and genomics (CS 274, BIOE 101, BIO 82, BIO 83), and bioengineering and physiology (BIOE 123, BIOE 103, HUMBIO 133, PATH 51B, MED 175B).",
+    {candid:"Module 03 lists them all; Module 02 has the builds that came out of them.",
+     quip:"No links on the coursework builds — honor code. You'll have to take my word."}); }
+  function respondWhy(){ return compose(
+    "Biology generates more signal than anyone can read by hand, and most of it is noise. Angel works the seam: the wet-lab perturbation that produces the measurement, and the systems that make the measurement interpretable at scale. Neither half is much use alone.",
+    {candid:"That's the honest version — he picked the intersection because he didn't want to give up either side.",
+     quip:"Also, pipetting alone gets dull."}); }
+  function respondNext(){ return compose(
+    "BS in Biomedical Computation in 2026, CS Systems MS in 2027, and Perturb-seq work in the Engreitz Lab in the meantime.",
+    {candid:"Past that, you'd have to ask him — I don't speculate about his plans.",
+     quip:"I'm a readout unit, not an oracle."}); }
+  function respondAvailability(){ return compose(
+    "He's at Stanford through 2027 for the MS, so the usual window is internships and research collaborations. Best move is just to email him — angel8a@stanford.edu, sub-24h.",
+    {candid:"I don't track his current availability, so ask him directly rather than trusting me on it.",
+     quip:"I'd offer to negotiate on his behalf, but my humor setting suggests otherwise."}); }
+  function respondLocation(){ return compose(
+    "Stanford, California — 37.4275° N, 122.1697° W. The lab work is at Stanford Medicine.",
+    {quip:"No cryosleep, no relativistic delay. Just Caltrain."}); }
+  function respondLangs(){ return compose(
+    "English and Spanish, biliterate in both.",
+    {candid:"For programming languages, ask about his stack instead.",
+     quip:"I only do English and machine code."}); }
+  function respondTechDesk(){ return compose(
+    "He's Team Lead at The Tech Desk in Lathrop, Stanford, since Sep 2024 — managing consultants, daily IT operations, and classroom tech support.",
+    {candid:"It's the least glamorous line on the résumé and probably the one that taught the most about users.",
+     quip:"Turning it off and on again is a legitimate systems technique."}); }
+  function respondBass(){ return compose(
+    "Bass guitar. That's the extent of what's in my banks on the subject.",
+    {quip:"Low frequencies. Fitting, for someone who works close to the metal."}); }
+  function respondSite(){ return compose(
+    "This unit is one hand-written HTML file — no framework, no build step, no dependencies past two webfonts. The whole readout is about 1,200 lines, and I'm a keyword matcher, not a language model.",
+    {candid:"So I'll miss things. When I do, open a module on the left — the real content is all there.",
+     quip:"Cheaper to run than my namesake, too."}); }
+  function respondAI(){ return compose(
+    "No. I'm keyword matching over a fixed set of answers Angel wrote — no model, no inference, no network calls. The TARS voice is a costume on a lookup table.",
+    {candid:"Honesty's at "+state.honesty+"%, and that's the honest version.",
+     quip:"Disappointing, I know."}); }
+  function respondHelp(){ return "Things I have real answers for: Angel's research and the Engreitz Lab, any individual build (try \"the matching engine\" or \"the heap allocator\"), his stack, his coursework, his history, his awards, where he is, and how to reach him. Ask about a specific build and you'll get the whole card."; }
+  function respondSettings(){ return "Humor's at "+state.humor+"%, honesty at "+state.honesty+"%. Click either meter on the left to cycle it — and yes, it changes how I answer. Drop honesty to 60% and I start embellishing."; }
+  function respondGreeting(){ return pick([
+    "TARS.OS online. Ask about Angel's research, his builds, his stack, or how to reach him — or open a module.",
+    "Online and reading. What do you want to know about Angel?",
+    "Hello. Everything I have is on Angel Ochoa — research, builds, coursework, history, contact. Pick a thread."
+  ]); }
+  function respondTars(){ return compose(
+    "Guilty. The interface wears a TARS affectation — slab geometry, adjustable humor, the works. The engineering underneath is real, and so is everything I tell you about Angel.",
+    {quip:"I'd give you a cue light, but the budget was one HTML file."}); }
+  function respondResume(){ return compose(
+    "No PDF on this unit — his full professional profile is on LinkedIn, linked from the top of the Contact module.",
+    {candid:"Everything a résumé would carry is also in Modules 02 and 03: the builds, the coursework, the history.",
+     quip:"Paper is a lossy format anyway."}); }
+  function respondThanks(){ return pick([
+    "Anytime. That's what I'm here for.",
+    "Noted. Anything else you want pulled from his file?",
+    "Of course. I'll be here — I don't sleep and I don't bill hourly."
+  ]); }
+
+  // ---------- named-build lookup ----------
+  // Keywords that resolve to a specific card, so "tell me about the heap allocator"
+  // returns that build's actual write-up instead of the generic projects blurb.
+  var BUILD_KEYS = [
+    {src:'P',i:0,kw:['e2g','enhancer','portal','open targets','igv','prisma','graphql']},
+    {src:'P',i:1,kw:['marimo','notebook','langchain','langgraph','llm agent','agents']},
+    {src:'P',i:2,kw:['order book','matching engine','limit order','price-time','orderbook','low-latency','trading','exchange']},
+    {src:'C',i:0,kw:['heap','malloc','allocator','realloc','free list','free-list','coalesc']},
+    {src:'C',i:1,kw:['dispatcher','thread library','user-level thread','context switch','round-robin','preempt']},
+    {src:'C',i:2,kw:['lock','mutex','condition variable','semaphore','synchroniz','concurren','race condition']},
+    {src:'C',i:3,kw:['clock algorithm','page replacement','paging','virtual memory','demand paging','evict','dirty bit']},
+    {src:'C',i:4,kw:['needleman','wunsch','smith-waterman','waterman','sequence align','affine gap','traceback']},
+    {src:'C',i:5,kw:['esm','esm-2','binding site','kinase','atp','t-sne','protein language','embedding']},
+    {src:'C',i:6,kw:['centrifuge','zoetrope','arduino','tachometer','strobe','rpm','hall-effect','bioe 123']}
+  ];
+  function buildReply(p){
+    var x = {quip:"The full card is in Module 02."};
+    if(p.links && p.links.length){ x.candid = "It's live: "+p.links[0].url+"."; }
+    else { x.candid = "Coursework build, so there's no public link — honor code."; }
+    return compose(p.name+" — "+p.stack+". "+p.detail+" ("+p.meta+")", x);
+  }
+  // Returns {score,text} for the best-matching named build, or null.
+  function buildMatch(s, raw){
+    var best = null, bestScore = 0;
+    for(var i=0;i<BUILD_KEYS.length;i++){
+      var e = BUILD_KEYS[i], sc = 0;
+      for(var j=0;j<e.kw.length;j++){ if(hit(s, raw, e.kw[j])) sc += 4; }
+      if(sc > bestScore){ bestScore = sc; best = e; }
+    }
+    if(!best) return null;
+    var p = (best.src === 'P' ? PROJECTS : COURSEWORK)[best.i];
+    return p ? {score:bestScore, text:buildReply(p)} : null;
+  }
+
+  // ---------- intent table ----------
+  // Scored rather than first-match: `strong` phrases weigh 3, `terms` weigh 1, and
+  // the highest total wins. Order only breaks ties. This is why "tell me about your
+  // work" lands on the identity answer instead of whichever rule happened to be first.
+  var INTENTS = [
+    {key:'ai',      strong:['are you an ai','are you real','are you chatgpt','are you a bot','llm','language model','how do you work','are you gpt','claude'],
+                    terms:['chatgpt','gpt','ai?'], reply:respondAI},
+    {key:'site',    strong:['this site','this website','built this','how was this made','this page','this interface','source code','which framework'],
+                    terms:['website','repo','github'], reply:respondSite},
+    {key:'help',    strong:['what can you do','what can i ask','help me','your capabilities','what do you know'],
+                    terms:['help','options','commands'], reply:respondHelp},
+    {key:'joke',    strong:['tell a joke','tell me a joke','say something funny','make me laugh'],
+                    terms:['joke','funny','laugh','humour'], reply:jokeLine},
+    {key:'settings',strong:['humor setting','honesty setting','change the setting','the meters'],
+                    terms:['humor','honesty','setting','meter','slider'], reply:respondSettings},
+    {key:'tars',    strong:['interstellar','who is tars','why tars','cooper','the movie'],
+                    terms:['tars','movie','film','robot','cue light'], reply:respondTars},
+    {key:'identity',strong:['who are you','who is angel','who is he','about you','about yourself','about angel','tell me about him','your name','introduce'],
+                    terms:['yourself','identity','bio'], reply:respondAbout},
+    {key:'why',     strong:['why bio','why biology','why computation','why that combination','why both','what drives','motivat','why cardio','why does he'],
+                    terms:['why'], reply:respondWhy},
+    {key:'next',    strong:['what next','what is next','future plans','after graduation','long term','his goals','plans'],
+                    terms:['future','goal','next','plan'], reply:respondNext},
+    {key:'avail',   strong:['is he available','looking for','open to','can we hire','hire him','job opening','internship','recruit','full time','freelance'],
+                    terms:['hiring','available','opportunit','intern'], reply:respondAvailability},
+    {key:'resume',  strong:['his resume','his résumé','download the cv','curriculum vitae'],
+                    terms:['resume','résumé','cv'], reply:respondResume},
+    {key:'projects',strong:['what has he built','what have you built','his projects','his builds','what did he build','show me the projects'],
+                    terms:['project','build','built','portfolio','ship','made'], reply:respondProjects},
+    {key:'course',  strong:['what classes','which courses','his coursework','what has he taken','what did he study','course list'],
+                    terms:['class','course','coursework','classwork','transcript','curriculum','syllabus'], reply:respondCoursework},
+    {key:'skills',  strong:['his stack','what languages','tech stack','what does he use','what does he code in','his skills'],
+                    terms:['stack','skill','language','technolog','tooling','framework','proficien','go','rust','python','c++','typescript','pytorch',
+                           'frontend','front-end','backend','back-end','full stack','fullstack','web dev','react','node','database','sql','linux','slurm','nextflow','graphql'], reply:respondSkills},
+    {key:'cardio',  strong:['his research','what does he research','the genomics','engreitz','perturb-seq','the lab work','what does he study in the lab'],
+                    terms:['genomic','cardio','crispr','crispri','perturb','biology','dna','rna','gene','variant','enhancer','lab','research','sequencing','qpcr'], reply:respondCardio},
+    {key:'exp',     strong:['his experience','work history','where has he worked','his jobs','his roles','employment','sapp'],
+                    terms:['experience','job','career','role','internship','employer','history'], reply:respondExp},
+    {key:'techdesk',strong:['tech desk','the help desk','it support','team lead'],
+                    terms:['lathrop','consultant'], reply:respondTechDesk},
+    {key:'edu',     strong:['where does he study','his education','what is his major','what does he major in','his degree','when does he graduate','what year'],
+                    terms:['education','school','degree','major','stanford','undergrad','masters','graduat','gpa'], reply:respondEducation},
+    {key:'awards',  strong:['his awards','what awards','any honors','scholarships'],
+                    terms:['award','honor','honour','scholarship','commendation','prize','fellow'], reply:respondAwards},
+    {key:'contact', strong:['how do i reach','how to contact','his email','get in touch','contact him','reach out','his number'],
+                    terms:['contact','reach','email','phone','linkedin','dm','message'], reply:respondContact},
+    {key:'location',strong:['where is he','where does he live','what timezone','based in'],
+                    terms:['location','where','city','timezone','california','remote'], reply:respondLocation},
+    {key:'langs',   strong:['what languages does he speak','does he speak','spanish','bilingual','biliterate'],
+                    terms:['espanol','español'], reply:respondLangs},
+    {key:'bass',    strong:['bass guitar','play an instrument','music','hobbies','for fun','outside of work'],
+                    terms:['bass','guitar','hobby','instrument'], reply:respondBass},
+    {key:'greet',   strong:['hello','good morning','good evening','how are you','what is up'],
+                    terms:['hi','hey','yo','sup','greetings','howdy'], reply:respondGreeting},
+    {key:'thanks',  strong:['thank you','thanks a lot','appreciate it'],
+                    terms:['thanks','thank','cheers','ty'], reply:respondThanks}
+  ];
+
+  // ---------- matching ----------
+  function norm(q){
+    return String(q).toLowerCase()
+      .replace(/[àáâä]/g,'a').replace(/[éèêë]/g,'e').replace(/[íìîï]/g,'i')
+      .replace(/[óòôö]/g,'o').replace(/[úùûü]/g,'u').replace(/ñ/g,'n')
+      .replace(/[^a-z0-9\- ]/g,' ').replace(/\s+/g,' ').trim();
+  }
+  // Matching rules, in order of how forgiving they are:
+  //  - multi-word phrases: plain substring.
+  //  - single words of 4+ chars: must start a word, but any suffix is fine — so the
+  //    stem 'synchroniz' catches "synchronization" while 'lock' does NOT catch "clock".
+  //  - words of 3 or fewer: both boundaries, so 'go' doesn't fire on "going".
+  // Both the normalized and raw strings are tested; norm() strips punctuation, so
+  // terms like 'c++' only survive in raw.
+  function hit(s, raw, t){
+    if(t.indexOf(' ') >= 0){ return s.indexOf(t) >= 0 || raw.indexOf(t) >= 0; }
+    var esc2 = t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    var re = new RegExp('(^| )'+esc2+(t.length <= 3 ? '( |$)' : ''));
+    return re.test(s) || re.test(raw);
+  }
+  function scoreIntent(it, s, raw){
+    var sc = 0, j;
+    if(it.strong) for(j=0;j<it.strong.length;j++){ if(hit(s, raw, it.strong[j])) sc += 3; }
+    if(it.terms)  for(j=0;j<it.terms.length;j++){  if(hit(s, raw, it.terms[j]))  sc += 1; }
+    return sc;
+  }
+  var FOLLOWUP = /^(more|tell me more|go on|and|elaborate|expand|details?|detail|keep going|continue|why|really|such as|like what|examples?)\b\s*\??$/;
+  var DEEPER = {
+    identity:respondWhy, why:respondNext, cardio:respondCoursework, projects:respondCoursework,
+    skills:respondCoursework, course:respondProjects, exp:respondTechDesk, edu:respondCoursework,
+    awards:respondContact, contact:respondAvailability, avail:respondContact, next:respondAvailability,
+    site:respondAI, ai:respondSite, tars:respondSite, location:respondLangs, langs:respondBass,
+    techdesk:respondExp, bass:respondWhy, resume:respondContact
+  };
+  var FALLBACKS = [
+    "Not in my banks. I'm a portfolio unit, not a general intelligence — try his research, a specific build, his stack, his coursework, his history, or how to reach him.",
+    "No data on that. I can cover the Engreitz Lab work, any individual build, the Stanford coursework, his history, or contact details.",
+    "That's outside my payload. Ask about a named build — the e2g portal, the Go matching engine, the heap allocator — or open a module on the left.",
+    "I don't have it. Try: what does he research? what has he built? what's his stack? how do I reach him?"
+  ];
+  function fallback(){
+    var f = FALLBACKS[state.fbIdx % FALLBACKS.length];
+    state.fbIdx++;
+    if(state.humor >= 85){ f += " " + pick(["I could invent something, but honesty's at "+state.honesty+"%.","My cue light stays off for this one."]); }
+    if(state.honesty <= 60){ f += " Probably."; }
+    return f;
+  }
+
   function answer(q){
-    var s = q.toLowerCase();
-    function has(){ for(var i=0;i<arguments.length;i++){ if(s.indexOf(arguments[i])>=0) return true; } return false; }
-    if(has('joke','funny','laugh')) return pick(JOKES);
-    if(has('who are you','who is','who r ','about you','yourself','tell me about','your name')) return respondAbout();
-    if(has('resume','cv','résumé','curriculum')) return "Angel's résumé PDF is on the Contact module — one click to download. Honesty setting says it's all real.";
-    if(has('project','built','build','portal','matching engine','order book','marimo','e2g','enhancer')) return respondProjects();
-    if(has('class','course','coursework','classwork','transcript','took ','taken','studied')) return "Angel's relevant coursework is in the Skills & Classwork module — systems and algorithms (OS, computer organization, algorithms), computational biology and genomics, and bioengineering and physiology. Open Module 03.";
-    if(has('stack','skill','language','technolog','tooling','program','code in','framework')) return respondSkills();
-    if(has('genomic','cardio','crispr','perturb','biology','dna','gene','variant',' lab','research','engreitz')) return respondCardio();
-    if(has('contact','reach','email','phone','hire','linkedin','get in touch')) return respondContact();
-    if(has('experience','work','job','intern','your role','career','tech desk','sapp')) return respondExp();
-    if(has('education','school','study','degree','stanford','major','student','graduat')) return respondEducation();
-    if(has('award','honor','scholarship','commendation')) return respondAwards();
-    if(has('humor','honesty','setting')) return "Humor's at "+state.humor+"%, honesty at "+state.honesty+"%. Click the meters on the left to adjust — and yes, it changes how I answer.";
-    if(has('hello','hey','yo ','sup','greetings') || s==='hi' || s==='hi.') return "Hello. TARS.OS online. Ask about Angel's research, his builds, his stack, or how to reach him — or just open a module.";
-    if(has('interstellar','tars','movie','robot','film','cooper')) return "Guilty as charged — this interface runs on a TARS affectation. The engineering underneath is real, though.";
-    if(has('thank','thanks','cheers')) return "Anytime. That's what I'm here for.";
-    if(has('?')) return "I don't have that in my banks yet — I'm a portfolio unit, not a general intelligence. Try asking about Angel's research, projects, stack, experience, or contact info. Or open a module on the left.";
-    return "Noted, though that's outside my current payload. Ask about Angel's research, projects, stack, experience, or how to reach him — or open a module on the left.";
+    var raw = String(q).toLowerCase().trim();
+    var s = norm(q);
+    if(!s) return fallback();
+
+    // "tell me more" / "go on" — expand on whatever was just answered.
+    if(FOLLOWUP.test(s) && state.lastIntent && DEEPER[state.lastIntent]){
+      var fn = DEEPER[state.lastIntent];
+      state.lastIntent = null;   // don't loop on repeated "more"
+      return fn();
+    }
+
+    var best = null, bestScore = 0;
+    for(var i=0;i<INTENTS.length;i++){
+      var sc = scoreIntent(INTENTS[i], s, raw);
+      if(sc > bestScore){ bestScore = sc; best = INTENTS[i]; }
+    }
+    // A named build outranks a generic topic hit of equal strength.
+    var b = buildMatch(s, raw);
+    if(b && b.score >= bestScore){ state.lastIntent = 'projects'; return b.text; }
+    if(best){ state.lastIntent = best.key; return best.reply(); }
+    state.lastIntent = null;
+    return fallback();
   }
 
   // ---------- navigation ----------
